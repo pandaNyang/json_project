@@ -1,7 +1,3 @@
-
-
-
-
 // JSON KEY 파악하기 
 
 
@@ -45,6 +41,7 @@ const testJson =
             "src": "Images/Sun.png",
             "name": "sun1",
             "hOffset": 250,
+            "src" : "what",
             "vOffset": 250,
             "alignment": { 
                 "src1": "Images/Sun.png",
@@ -89,7 +86,8 @@ const testJson2 =
 
 // ================
 
-const noneKey  = new Array()
+const compareResultJson1 = new Map();
+const compareResultJson2 = new Map();
 
 
 const isJson = (jsonObj) => {
@@ -117,62 +115,78 @@ const checkJsonDepth = (jsonObj, depth = 0, maxDepth  = 0) => {
     if(maxDepth < depth)
         maxDepth = depth;
 
-    let 기존깊이 = depthLength;
+    let preDepth = depthLength;
 
     for(let i = 0 ; i < keys.length; i ++) {
         isChildJson = isJson(jsonObj[keys[i]]);
         if(isChildJson){
-            let obj = checkJsonDepth(jsonObj[keys[i]], 기존깊이 + 1, maxDepth);
+            let obj = checkJsonDepth(jsonObj[keys[i]], preDepth + 1, maxDepth);
             depthLength = obj.depthLength;
             maxDepth = obj.maxDepth;
         }
     } 
 
     return {depthLength, maxDepth}; 
-``
 }
+
 
 
 const checkTwoJsons = (jsonObj1, jsonObj2, depth = 0, maxDepth  = 0) => {
     let depthLength = depth;
     let isChildJson1 = false;
     let isChildJson2 = false;
+    let notSameValue = [];
+    let noneKey  = new Array();
 
     let keys = Object.keys(jsonObj1);
     let keys2 = Object.keys(jsonObj2);
 
-    if(keys.length != keys2.length){
-        checkKeyNotExist(keys, keys2);
-        //throw new Error('키의 길이가 일치하지 않음');
-        //TOBE -> 어느 키값이 missing 됬는지 
-    }
-
+    // 다른 key 값 확인 (value 상관 x 오로지 key 기준)
+    let {notMatchKey,notExistKey}  = checkKeyNotExist(keys, keys2);
+    
+    
     if(maxDepth < depth)
         maxDepth = depth;
 
-    let 기존깊이 = depthLength;
+    let preDepth = depthLength;
 
     for(let i in jsonObj1) { 
         if(keys2.includes(i)){
             isChildJson1 = isJson(jsonObj1[i]);
             isChildJson2 = isJson(jsonObj2[i]);
-            if(isChildJson1 && isChildJson2){
-                let obj = checkTwoJsons(jsonObj1[i], jsonObj2[i], 기존깊이 + 1, maxDepth);
+            if(isChildJson1 && isChildJson2){ //둘다 json 오브젝트 일때
+                let obj = checkTwoJsons(jsonObj1[i], jsonObj2[i], preDepth + 1, maxDepth);
                 depthLength = obj.depthLength;
                 maxDepth = obj.maxDepth;
                 console.log(obj)
+            }else if(jsonObj1[i] !== jsonObj2[i]){  
+                //둘다 json Obj가 아닐 때 값이 같은지 확인해야함.
+                //값이 같지 않을 ㄸㅐ 
+                
+                notSameValue.push(i);
             }
         } else {
-            noneKey.push(i);//TOBE 해당되지 않는 아이들 저장.
+            noneKey.push(i); //TOBE 해당되지 않는 아이들 저장.
             //throw new Error('일치하지않음')
         }
     } 
 
+    compareResultJson1.set(depth, {notExistKey, notSameValue, noneKey}); 
+    compareResultJson2.set(depth, {notMatchKey, notSameValue});
+
+    console.log(compareResultJson1);
+    console.log(compareResultJson2);
+   
     return {depthLength, maxDepth}; 
 ``
 }
+/**
+ *    둘 중 하나의 키 길이가 다를 때 실행되는 함수 
+ * 
+ */
 
 const checkKeyNotExist = (key1, key2) => {
+    
     let longgerKey = key1;
     let shorterKey = key2;
     
@@ -186,7 +200,7 @@ const checkKeyNotExist = (key1, key2) => {
 
     for(let i of shorterKey){
         if(!longgerKey.includes(i)){
-            notMatchKey.push(i);
+            notMatchKey.push(i); 
         }
     }
 
@@ -197,7 +211,7 @@ const checkKeyNotExist = (key1, key2) => {
         }
     }
 
-    return {notMatchKey, notExistKey}
+    return {notMatchKey, notExistKey};
 }
 
 
@@ -222,8 +236,11 @@ const checkKeyNotExist = (key1, key2) => {
 const main = (input) => {
     // json 인지 파악여부에 대한 코드 
 
-    let keys = Object.keys(input);
-    console.log(keys);
+    // let keys = Object.keys(input);
+    
+    checkTwoJsons(testJson, testJson2);
+
+    // console.log(keys);
 
     return true;
 };
@@ -231,9 +248,8 @@ const main = (input) => {
 // 터미널 node main.js
 
 
-
 console.log(checkTwoJsons(testJson, testJson2))
-//main(testJson);
+main(testJson);
  
 
 
