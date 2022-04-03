@@ -19,3 +19,21 @@
   height: 1200px;
   margin: 0 auto;
 }
+
+.textBlock {
+  border-radius: 15px;
+  box-sizing: border-box;
+  border: solid 2px #1E90FF;
+  font-size: 15px;
+  padding: 20px;
+  height: 1000px;
+  resize: none;
+  width: 100%;
+}
+
+.textDiv {
+  width: 40%;
+  float: left;
+  margin: 5%;
+  box-sizing: border-box;
+}
