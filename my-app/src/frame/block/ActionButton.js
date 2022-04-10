@@ -1,26 +1,22 @@
 import React, {Component} from "react";
 
 export class ActionButton extends Component {
-    state = {
-        actionType : ''
-    }
-
     buttonActionSend = () =>{
-        this.props.buttonAction('COMAPRE');
+        this.props.buttonAction('COMPARE');
     }
 
     render(){
         if(this.props.resultType == 'INITIAL'){
             return (
             <div>
-                <button onClick={this.buttonActionSend}> COMPARE </button>
+                <button onClick={this.buttonActionSend} class="btn_initial"> COMPARE </button>
             </div>
             )
-        }else if(this.props.resultType == 'SAME'){
+        } else if(this.props.resultType == 'SAME'){
             return (
                 <div>🥳 SAME 🥳</div>
             )
-        }else {
+        } else {
             return (
                 <div> NOT SAME</div>
             )

@@ -37,3 +37,27 @@
   margin: 5%;
   box-sizing: border-box;
 }
+
+
+button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.btn_initial {
+  text-align: center;
+  text-decoration: none;
+
+  width: 30%;
+  height: 45px;
+  border: none;
+  border-radius: 15px;
+  background-color: #1E90FF;
+  color: white;
+
+  margin:auto;
+  margin-bottom: 5em;
+  display:block;
+
+}
